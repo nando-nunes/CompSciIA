@@ -4,8 +4,6 @@
 
 package com.compsciia.compsciia;
 
-import java.util.Date;
-
 /**
  *
  * @author fernandonunes
@@ -13,7 +11,6 @@ import java.util.Date;
 public class CompSciIA {
 
     public static void main(String[] args) {
-        Student oi = new Student();
-        System.out.println(oi.toString());
+        DBTools.addStudent("aba", "2000-12-25", 2, 2025);
     }
 }

@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
     public static Connection getConnection() {
         // [cite: 52] Connection URL
-        String url = "jdbc:mysql://localhost:3306/testing_database?zeroDateTimeBehavior=CONVERT_TO_NULL";
+        String url = "jdbc:mysql://127.0.0.1:3306/CompSciIA?zeroDateTimeBehavior=CONVERT_TO_NULL";
         String user = "root";
         String pass = "fernando";
 
