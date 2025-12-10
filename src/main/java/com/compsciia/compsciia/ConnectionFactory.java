@@ -4,10 +4,25 @@
  */
 package com.compsciia.compsciia;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  *
  * @author fernandonunes
  */
 public class ConnectionFactory {
-    
+    public static Connection getConnection() {
+        // [cite: 52] Connection URL
+        String url = "jdbc:mysql://localhost:3306/testing_database?zeroDateTimeBehavior=CONVERT_TO_NULL";
+        String user = "root";
+        String pass = "fernando";
+
+        try {
+            return DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
