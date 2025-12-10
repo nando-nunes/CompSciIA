@@ -4,6 +4,8 @@
 
 package com.compsciia.compsciia;
 
+import java.util.Date;
+
 /**
  *
  * @author fernandonunes
@@ -11,6 +13,7 @@ package com.compsciia.compsciia;
 public class CompSciIA {
 
     public static void main(String[] args) {
-        System.out.println("testing netbeans");
+        Student oi = new Student();
+        System.out.println(oi.toString());
     }
 }

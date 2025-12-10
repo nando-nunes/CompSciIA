@@ -4,10 +4,59 @@
  */
 package com.compsciia.compsciia;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author fernandonunes
  */
 public class Student {
+    public String name;
+    public LocalDate birthdate;
+    public int group;
+    public int entry;
+
+    public Student(){
+        
+    }
+    
+    public Student(String name, LocalDate birthdate, int group, int entry) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.group = group;
+        this.entry = entry;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
+    }
+
+    public int getEntry() {
+        return entry;
+    }
+
+    public void setEntry(int entry) {
+        this.entry = entry;
+    }
     
 }

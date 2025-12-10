@@ -81,6 +81,7 @@ public class HomeScreen extends javax.swing.JFrame {
         EditStudentButton.setText("Edit Student");
 
         AddStudentButton.setText("Add Student");
+        AddStudentButton.addActionListener(this::AddStudentButtonActionPerformed);
 
         AnalyticsButton.setText("Analytics");
         AnalyticsButton.addActionListener(this::AnalyticsButtonActionPerformed);
@@ -130,12 +131,20 @@ public class HomeScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AnalyticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnalyticsButtonActionPerformed
-        // TODO add your handling code here:
+        Analytics analytics  = new Analytics();
+        analytics.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_AnalyticsButtonActionPerformed
 
     private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
         System.exit(0);
     }//GEN-LAST:event_ExitButtonActionPerformed
+
+    private void AddStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddStudentButtonActionPerformed
+        AddStudent addStd = new AddStudent();
+        addStd.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_AddStudentButtonActionPerformed
 
     /**
      * @param args the command line arguments
