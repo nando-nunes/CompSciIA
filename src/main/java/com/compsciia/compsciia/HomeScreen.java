@@ -4,6 +4,13 @@
  */
 package com.compsciia.compsciia;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author fernandonunes
@@ -17,7 +24,36 @@ public class HomeScreen extends javax.swing.JFrame {
      */
     public HomeScreen() {
         initComponents();
+        loadTable();
     }
+    public final void loadTable() {
+    try {
+        // 1. Connect to Database
+        Connection cnct = ConnectionFactory.getConnection();
+        String sql = "SELECT * FROM Students";
+        PreparedStatement stmt = cnct.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        // 2. Get Table Model from the GUI JTable
+        DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        // 3. Loop through result set and add rows
+        while (rs.next()) {
+            Vector<Object> row = new Vector<>();
+            row.add(rs.getInt("StudentID"));
+            row.add(rs.getString("Name"));
+            row.add(rs.getDate("Birthdate"));
+            row.add(rs.getInt("StudentGroup"));
+            row.add(rs.getInt("YearofEntry"));
+            // Add the row to the model
+            model.addRow(row);
+        }
+        cnct.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,7 +66,7 @@ public class HomeScreen extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        StudentsTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         ExitButton = new javax.swing.JButton();
         EditStudentButton = new javax.swing.JButton();
@@ -39,7 +75,7 @@ public class HomeScreen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        StudentsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -58,10 +94,10 @@ public class HomeScreen extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        jScrollPane1.setViewportView(StudentsTable);
+        if (StudentsTable.getColumnModel().getColumnCount() > 0) {
+            StudentsTable.getColumnModel().getColumn(2).setResizable(false);
+            StudentsTable.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -176,9 +212,9 @@ public class HomeScreen extends javax.swing.JFrame {
     private javax.swing.JButton AnalyticsButton;
     private javax.swing.JButton EditStudentButton;
     private javax.swing.JButton ExitButton;
+    private javax.swing.JTable StudentsTable;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
