@@ -11,10 +11,10 @@ import java.time.LocalDate;
  * @author fernandonunes
  */
 public class Student {
-    public String name;
-    public LocalDate birthdate;
-    public int group;
-    public int entry;
+    private String name;
+    private LocalDate birthdate;
+    private int group;
+    private int entry;
 
     public Student(){
         

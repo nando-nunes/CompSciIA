@@ -4,6 +4,11 @@
  */
 package com.compsciia.compsciia;
 
+import java.io.File;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author fernandonunes
@@ -279,7 +284,16 @@ public class AddStudent extends javax.swing.JFrame {
     }//GEN-LAST:event_HomeButtonActionPerformed
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
-        // TODO add your handling code here:
+        Address address = new Address();
+        address.setNumber(Integer.parseInt(HouseNumberField.getText()));
+        AddressValidation.validateCEP(PCField.getText(), address, this);
+        if(!address.isValid()){
+            return;
+        }
+        String studentName = NameField.getText();
+        LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int entry = YearChooser.getYear();
+        File imageFile;
     }//GEN-LAST:event_AddButtonActionPerformed
 
     /**
