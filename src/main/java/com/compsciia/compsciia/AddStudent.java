@@ -7,6 +7,7 @@ package com.compsciia.compsciia;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
  */
 public class AddStudent extends javax.swing.JFrame {
     
+    private File selectedFile = new File("src/main/resources/default_pfp.png");
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AddStudent.class.getName());
 
     /**
@@ -64,6 +66,7 @@ public class AddStudent extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         FileSelectButton.setText("Select File");
+        FileSelectButton.addActionListener(this::FileSelectButtonActionPerformed);
 
         jLabel5.setText("Student Photo");
 
@@ -295,6 +298,15 @@ public class AddStudent extends javax.swing.JFrame {
         int entry = YearChooser.getYear();
         File imageFile;
     }//GEN-LAST:event_AddButtonActionPerformed
+
+    private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if(result==JFileChooser.APPROVE_OPTION){
+            System.out.println("Approved");
+            selectedFile = fileChooser.getSelectedFile();
+        }
+    }//GEN-LAST:event_FileSelectButtonActionPerformed
 
     /**
      * @param args the command line arguments
