@@ -11,6 +11,6 @@ package com.compsciia.compsciia;
 public class CompSciIA {
 
     public static void main(String[] args) {
-        DBTools.addStudent("aba", "2000-12-25", 2, 2025);
+//        DBTools.addStudent("aba", "2000-12-25", 2, 2025);
     }
 }

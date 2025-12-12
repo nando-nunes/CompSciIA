@@ -19,16 +19,16 @@ import java.sql.SQLException;
  * @author fernandonunes
  */
 public class DBTools {
-    public static void addStudent(String name, String birthdate, int group, int entry) {
+    public static void addStudent(Student student) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry) VALUES(?,?,?,?)";
             PreparedStatement stmt = cnct.prepareStatement(sql);
 
-            stmt.setString(1, name);
-            stmt.setString(2, birthdate);
-            stmt.setInt(3, group);
-            stmt.setInt(4, entry);
+            stmt.setString(1, student.getName());
+            stmt.setString(2, student.getBirthdate().toString());
+            stmt.setInt(3, student.getGroup());
+            stmt.setInt(4, student.getEntry());
 
             stmt.execute();
             cnct.close();
@@ -37,7 +37,7 @@ public class DBTools {
         }
     }
     // Add Student (With Image - Polymorphism) [cite: 81]
-    public static void addStudent(String name, String birthdate, int group, int entry, File imageFile) {
+    public static void addStudent(Student student, File imageFile) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Note: SQL query includes 'Image' column [cite: 83]
@@ -46,14 +46,16 @@ public class DBTools {
 
             // File handling [cite: 84-89]
             Path filePath = imageFile.toPath();
-            String fileName = imageFile.getName();
-            String target = "src/main/resources/StudentImages/" + fileName;
+            String pathStr = filePath.toString();
+            String extension = pathStr.substring(pathStr.indexOf("."));
+            String fileName = "pfp_"+student;
+            String target = "src/main/resources/student_images/" + fileName;
             Path targetPath = Paths.get(target);
 
-            stmt.setString(1, name);
-            stmt.setString(2, birthdate);
-            stmt.setInt(3, group);
-            stmt.setInt(4, entry);
+            stmt.setString(1, student.getName());
+            stmt.setString(2, student.getBirthdate().toString());
+            stmt.setInt(3, student.getGroup());
+            stmt.setInt(4, student.getEntry());
             stmt.setString(5, fileName); // Storing only filename in DB
 
             // Copy file to resources [cite: 95]

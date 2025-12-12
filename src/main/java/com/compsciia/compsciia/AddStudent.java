@@ -15,8 +15,8 @@ import javax.swing.JOptionPane;
  * @author fernandonunes
  */
 public class AddStudent extends javax.swing.JFrame {
-    
-    private File selectedFile = new File("src/main/resources/default_pfp.png");
+
+    private File selectedFile = new File("src/main/resources/student_images/default_pfp.png");
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AddStudent.class.getName());
 
     /**
@@ -73,6 +73,7 @@ public class AddStudent extends javax.swing.JFrame {
         jLabel4.setText("Year of Entry");
 
         GroupCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Group 1", "Group2" }));
+        GroupCBox.setToolTipText("");
 
         jLabel3.setText("Group");
 
@@ -290,19 +291,27 @@ public class AddStudent extends javax.swing.JFrame {
         Address address = new Address();
         address.setNumber(Integer.parseInt(HouseNumberField.getText()));
         AddressValidation.validateCEP(PCField.getText(), address, this);
-        if(!address.isValid()){
+        if (!address.isValid()) {
+            PCField.setText("");
             return;
         }
         String studentName = NameField.getText();
         LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int group = GroupCBox.getSelectedIndex() + 1;
         int entry = YearChooser.getYear();
-        File imageFile;
+        File imageFile = selectedFile;
+        Student student = new Student(studentName, birthDate, group, entry);
+        DBTools.addStudent(student, imageFile);
+        
+        HomeScreen home = new HomeScreen();
+        home.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
-        if(result==JFileChooser.APPROVE_OPTION){
+        if (result == JFileChooser.APPROVE_OPTION) {
             System.out.println("Approved");
             selectedFile = fileChooser.getSelectedFile();
         }
