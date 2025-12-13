@@ -38,7 +38,6 @@ public class AddressValidation {
             address.setValid(true);
 
         } catch (IOException | InterruptedException | JSONException e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(frame, "Insert a valid Postal Code","Error loading Postal Code",JOptionPane.ERROR_MESSAGE);
             
         }

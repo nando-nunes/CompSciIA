@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -37,7 +38,7 @@ public class DBTools {
         }
     }
     // Add Student (With Image - Polymorphism) [cite: 81]
-    public static void addStudent(Student student, File imageFile) {
+    public static void addStudent(Student student, File imageFile, Address address) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Note: SQL query includes 'Image' column [cite: 83]
@@ -62,6 +63,9 @@ public class DBTools {
             Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
             stmt.execute();
+            
+            updateStudent(getLastID(),"Address",address.toString());
+            
             cnct.close();
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
@@ -84,5 +88,22 @@ public class DBTools {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static int getLastID(){
+        try {
+            Connection cnct = ConnectionFactory.getConnection();
+            // Dynamic SQL construction [cite: 186]
+            String sql = "SELECT * FROM Students ORDER BY StudentID DESC LIMIT 1;"; 
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+            ResultSet results = stmt.executeQuery(sql);
+            
+            while(results.next()){
+                return results.getInt("StudentID");
+            }
+            return -1;
+        } catch (SQLException ex) {
+            return -1;
+        }   
     }
 }

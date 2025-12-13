@@ -46,6 +46,7 @@ public class HomeScreen extends javax.swing.JFrame {
             row.add(rs.getDate("Birthdate"));
             row.add(rs.getInt("StudentGroup"));
             row.add(rs.getInt("YearofEntry"));
+            row.add(rs.getString("Address"));
             // Add the row to the model
             model.addRow(row);
         }
@@ -89,14 +90,21 @@ public class HomeScreen extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane1.setViewportView(StudentsTable);
         if (StudentsTable.getColumnModel().getColumnCount() > 0) {
-            StudentsTable.getColumnModel().getColumn(2).setResizable(false);
+            StudentsTable.getColumnModel().getColumn(0).setPreferredWidth(25);
             StudentsTable.getColumnModel().getColumn(4).setResizable(false);
         }
 

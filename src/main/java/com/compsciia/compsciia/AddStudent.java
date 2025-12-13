@@ -295,13 +295,14 @@ public class AddStudent extends javax.swing.JFrame {
             PCField.setText("");
             return;
         }
+        System.out.println(address.toString());
         String studentName = NameField.getText();
         LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         int group = GroupCBox.getSelectedIndex() + 1;
         int entry = YearChooser.getYear();
         File imageFile = selectedFile;
         Student student = new Student(studentName, birthDate, group, entry);
-        DBTools.addStudent(student, imageFile);
+        DBTools.addStudent(student, imageFile,address);
         
         HomeScreen home = new HomeScreen();
         home.setVisible(true);
