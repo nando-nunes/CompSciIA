@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  * @author fernandonunes
  */
 public class HomeScreen extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(HomeScreen.class.getName());
 
     /**
@@ -26,35 +28,45 @@ public class HomeScreen extends javax.swing.JFrame {
         initComponents();
         loadTable();
     }
+
     public final void loadTable() {
-    try {
-        // 1. Connect to Database
-        Connection cnct = ConnectionFactory.getConnection();
-        String sql = "SELECT * FROM Students";
-        PreparedStatement stmt = cnct.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
+        try {
+            // 1. Connect to Database
+            Connection cnct = ConnectionFactory.getConnection();
+            String sql = "SELECT * FROM Students";
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
 
-        // 2. Get Table Model from the GUI JTable
-        DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
-        model.setRowCount(0); // Clear existing data
+            // 2. Get Table Model from the GUI JTable
+            DefaultTableModel model = (DefaultTableModel) StudentsTable.getModel();
+            model.setRowCount(0); // Clear existing data
 
-        // 3. Loop through result set and add rows
-        while (rs.next()) {
-            Vector<Object> row = new Vector<>();
-            row.add(rs.getInt("StudentID"));
-            row.add(rs.getString("Name"));
-            row.add(rs.getDate("Birthdate"));
-            row.add(rs.getInt("StudentGroup"));
-            row.add(rs.getInt("YearofEntry"));
-            row.add(rs.getString("Address"));
-            // Add the row to the model
-            model.addRow(row);
+            // 3. Loop through result set and add rows
+            while (rs.next()) {
+                Vector<Object> row = new Vector<>();
+                row.add(rs.getInt("StudentID"));
+                row.add(rs.getString("Name"));
+                row.add(rs.getDate("Birthdate"));
+                row.add(rs.getInt("StudentGroup"));
+                row.add(rs.getString("PrevSchool"));
+                row.add(rs.getInt("YearofEntry"));
+                row.add(rs.getString("Address"));
+                // Add the row to the model
+                model.addRow(row);
+            }
+            cnct.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        cnct.close();
-    } catch (SQLException e) {
-        e.printStackTrace();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        StudentsTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        StudentsTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        StudentsTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        StudentsTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,20 +90,20 @@ public class HomeScreen extends javax.swing.JFrame {
 
         StudentsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Student Name", "Birthdate", "Group", "Entry", "Address"
+                "ID", "Name", "Birthdate", "Group", "Previous School", "Entry", "Address"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -105,18 +117,23 @@ public class HomeScreen extends javax.swing.JFrame {
         jScrollPane1.setViewportView(StudentsTable);
         if (StudentsTable.getColumnModel().getColumnCount() > 0) {
             StudentsTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-            StudentsTable.getColumnModel().getColumn(4).setResizable(false);
+            StudentsTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+            StudentsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+            StudentsTable.getColumnModel().getColumn(3).setPreferredWidth(60);
+            StudentsTable.getColumnModel().getColumn(3).setMaxWidth(60);
+            StudentsTable.getColumnModel().getColumn(5).setMaxWidth(50);
+            StudentsTable.getColumnModel().getColumn(6).setPreferredWidth(200);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
         );
 
         ExitButton.setText("Exit");
@@ -175,7 +192,7 @@ public class HomeScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AnalyticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnalyticsButtonActionPerformed
-        Analytics analytics  = new Analytics();
+        Analytics analytics = new Analytics();
         analytics.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_AnalyticsButtonActionPerformed

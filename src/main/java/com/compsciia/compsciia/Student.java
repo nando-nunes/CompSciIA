@@ -15,16 +15,35 @@ public class Student {
     private LocalDate birthdate;
     private int group;
     private int entry;
+    private String prevSchool;
+
+    public String getPrevSchool() {
+        return prevSchool;
+    }
+
+    public void setPrevSchool(String prevSchool) {
+        this.prevSchool = prevSchool;
+    }
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public Student(){
         
     }
     
-    public Student(String name, LocalDate birthdate, int group, int entry) {
+    public Student(String name, LocalDate birthdate, int group, int entry, Address address) {
         this.name = name;
         this.birthdate = birthdate;
         this.group = group;
         this.entry = entry;
+        this.address = address;
     }
 
     public String getName() {
@@ -41,6 +60,10 @@ public class Student {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
+    }
+    
+    public void setBirthdate(String birthdate) {
+        this.birthdate = LocalDate.parse(birthdate);
     }
 
     public int getGroup() {

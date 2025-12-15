@@ -23,13 +23,15 @@ public class DBTools {
     public static void addStudent(Student student) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
-            String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Address, PrevSchool) VALUES(?,?,?,?,?,?)";
             PreparedStatement stmt = cnct.prepareStatement(sql);
 
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getBirthdate().toString());
             stmt.setInt(3, student.getGroup());
             stmt.setInt(4, student.getEntry());
+            stmt.setString(5, student.getAddress().toString());
+            stmt.setString(6, student.getPrevSchool());
 
             stmt.execute();
             cnct.close();
@@ -38,33 +40,33 @@ public class DBTools {
         }
     }
     // Add Student (With Image - Polymorphism) [cite: 81]
-    public static void addStudent(Student student, File imageFile, Address address) {
+    public static void addStudent(Student student, File imageFile) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Note: SQL query includes 'Image' column [cite: 83]
-            String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Image) VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Address, PrevSchool) VALUES(?,?,?,?,?,?)";
             PreparedStatement stmt = cnct.prepareStatement(sql);
-
-            // File handling [cite: 84-89]
-            Path filePath = imageFile.toPath();
-            String pathStr = filePath.toString();
-            String extension = pathStr.substring(pathStr.indexOf("."));
-            String fileName = "pfp_"+student;
-            String target = "src/main/resources/student_images/" + fileName;
-            Path targetPath = Paths.get(target);
 
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getBirthdate().toString());
             stmt.setInt(3, student.getGroup());
             stmt.setInt(4, student.getEntry());
-            stmt.setString(5, fileName); // Storing only filename in DB
-
-            // Copy file to resources [cite: 95]
-            Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            stmt.setString(5, student.getAddress().toString());
+            stmt.setString(6, student.getPrevSchool());
+            
 
             stmt.execute();
+            // File handling [cite: 84-89]
+            Path filePath = imageFile.toPath();
+            String pathStr = filePath.toString();
+            String extension = pathStr.substring(pathStr.indexOf("."));
+            String fileName = "pfp_"+getLastID();
+            String target = "src/main/resources/student_images/" + fileName;
+            updateStudent(getLastID(),"Image",target);
             
-            updateStudent(getLastID(),"Address",address.toString());
+            Path targetPath = Paths.get(target);
+            // Copy file to resources [cite: 95]
+            Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
             
             cnct.close();
         } catch (IOException | SQLException e) {
@@ -90,6 +92,31 @@ public class DBTools {
         }
     }
     
+    public static Student searchStudent(int id){
+        try {
+            Connection cnct = ConnectionFactory.getConnection();
+            // Dynamic SQL construction [cite: 186]
+            String sql = "SELECT * FROM Students WHERE StudentID = ?"; 
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+            
+            stmt.setInt(1, id);
+            ResultSet results = stmt.executeQuery(sql);
+            
+            Student student = new Student();
+            while(results.next()){
+                student.setName(results.getString("Name"));
+                Address address = new Address(results.getString("Address"));
+                student.setAddress(address);
+                student.setBirthdate(results.getString("Birthdate"));
+                student.setGroup(results.getInt("StudentGroup"));
+                student.setEntry(results.getInt("YearofEntry"));
+            }
+            return student;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+    
     public static int getLastID(){
         try {
             Connection cnct = ConnectionFactory.getConnection();
@@ -104,6 +131,6 @@ public class DBTools {
             return -1;
         } catch (SQLException ex) {
             return -1;
-        }   
+        }
     }
 }
