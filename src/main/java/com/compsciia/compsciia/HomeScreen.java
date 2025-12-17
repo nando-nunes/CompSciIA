@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class HomeScreen extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(HomeScreen.class.getName());
+    private Student selectedStudent;
 
     /**
      * Creates new form HomeScreen
@@ -114,6 +115,11 @@ public class HomeScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        StudentsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                StudentsTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(StudentsTable);
         if (StudentsTable.getColumnModel().getColumnCount() > 0) {
             StudentsTable.getColumnModel().getColumn(0).setPreferredWidth(25);
@@ -140,6 +146,7 @@ public class HomeScreen extends javax.swing.JFrame {
         ExitButton.addActionListener(this::ExitButtonActionPerformed);
 
         EditStudentButton.setText("Edit Student");
+        EditStudentButton.addActionListener(this::EditStudentButtonActionPerformed);
 
         AddStudentButton.setText("Add Student");
         AddStudentButton.addActionListener(this::AddStudentButtonActionPerformed);
@@ -206,6 +213,22 @@ public class HomeScreen extends javax.swing.JFrame {
         addStd.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_AddStudentButtonActionPerformed
+
+    private void StudentsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StudentsTableMouseClicked
+        int row = StudentsTable.getSelectedRow();
+        if (row == -1) {
+            row = 0;
+        }
+        int id = Integer.parseInt(StudentsTable.getValueAt(row, 0).toString());
+        selectedStudent = DBTools.searchStudent(id);
+        System.out.println(id+" | "+selectedStudent.getName());
+    }//GEN-LAST:event_StudentsTableMouseClicked
+
+    private void EditStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditStudentButtonActionPerformed
+        EditStudent editStudent = new EditStudent(selectedStudent);
+        editStudent.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_EditStudentButtonActionPerformed
 
     /**
      * @param args the command line arguments

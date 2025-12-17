@@ -34,6 +34,8 @@ public class DBTools {
             stmt.setString(6, student.getPrevSchool());
 
             stmt.execute();
+            
+            student.setId(getLastID());
             cnct.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -61,12 +63,14 @@ public class DBTools {
             String pathStr = filePath.toString();
             String extension = pathStr.substring(pathStr.indexOf("."));
             String fileName = "pfp_"+getLastID();
-            String target = "src/main/resources/student_images/" + fileName;
+            String target = "src/main/resources/student_images/" + fileName+extension;
             updateStudent(getLastID(),"Image",target);
             
             Path targetPath = Paths.get(target);
             // Copy file to resources [cite: 95]
             Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            
+            student.setId(getLastID());
             
             cnct.close();
         } catch (IOException | SQLException e) {
@@ -92,14 +96,39 @@ public class DBTools {
         }
     }
     
+    public static void updateStudent(int id, Student student, File imageFile){
+        try {
+            updateStudent(id,"Name",student.getName());
+            updateStudent(id,"Birthdate",student.getBirthdate().toString());
+            updateStudent(id,"Address",student.getAddress().toString());
+            updateStudent(id,"StudentGroup",""+student.getGroup());
+            updateStudent(id,"PrevSchool",student.getPrevSchool());
+            updateStudent(id,"YearofEntry",""+student.getEntry());
+            
+            Path filePath = imageFile.toPath();
+            String pathStr = filePath.toString();
+            String extension = pathStr.substring(pathStr.indexOf("."));
+            String fileName = "pfp_"+getLastID();
+            String target = "src/main/resources/student_images/" + fileName+extension;
+            
+            Path targetPath = Paths.get(target);
+            // Copy file to resources [cite: 95]
+            Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            updateStudent(id,"Image",target);
+            
+        } catch (IOException ex) {
+            System.getLogger(DBTools.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    
+    
     public static Student searchStudent(int id){
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Dynamic SQL construction [cite: 186]
-            String sql = "SELECT * FROM Students WHERE StudentID = ?"; 
+            String sql = "SELECT * FROM Students WHERE StudentID = "+id; 
             PreparedStatement stmt = cnct.prepareStatement(sql);
             
-            stmt.setInt(1, id);
             ResultSet results = stmt.executeQuery(sql);
             
             Student student = new Student();
@@ -110,9 +139,12 @@ public class DBTools {
                 student.setBirthdate(results.getString("Birthdate"));
                 student.setGroup(results.getInt("StudentGroup"));
                 student.setEntry(results.getInt("YearofEntry"));
+                student.setId(results.getInt("StudentID"));
             }
+            cnct.close();
             return student;
         } catch (SQLException ex) {
+            ex.printStackTrace();
             return null;
         }
     }

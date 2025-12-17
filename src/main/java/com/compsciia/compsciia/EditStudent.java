@@ -4,6 +4,12 @@
  */
 package com.compsciia.compsciia;
 
+import java.io.File;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  *
  * @author fernandonunes
@@ -11,11 +17,16 @@ package com.compsciia.compsciia;
 public class EditStudent extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditStudent.class.getName());
-
+    
+    private static Student student;
+    private static File imageFile;
+    
     /**
      * Creates new form EditStudent
+     * @param student
      */
-    public EditStudent() {
+    public EditStudent(Student student) {
+        EditStudent.student = student;
         initComponents();
     }
 
@@ -28,7 +39,10 @@ public class EditStudent extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        ExitButton = new javax.swing.JButton();
+        AnalyticsButton = new javax.swing.JButton();
+        HomeButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         FileSelectButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -47,14 +61,20 @@ public class EditStudent extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         HouseNumberField = new javax.swing.JFormattedTextField();
         PCField = new javax.swing.JFormattedTextField();
-        jPanel2 = new javax.swing.JPanel();
-        ExitButton = new javax.swing.JButton();
-        AnalyticsButton = new javax.swing.JButton();
-        HomeButton = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        PrevSchCBox = new javax.swing.JComboBox<>();
+        jPanel8 = new javax.swing.JPanel();
+        EditButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        ExitButton.setText("Exit");
+        ExitButton.addActionListener(this::ExitButtonActionPerformed);
+
+        AnalyticsButton.setText("Analytics");
+
+        HomeButton.setText("Home");
+        HomeButton.addActionListener(this::HomeButtonActionPerformed);
 
         FileSelectButton.setText("Select File");
 
@@ -62,7 +82,7 @@ public class EditStudent extends javax.swing.JFrame {
 
         jLabel4.setText("Year of Entry");
 
-        GroupCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Group 1", "Group2" }));
+        GroupCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Group 1", "Group 2" }));
 
         jLabel3.setText("Group");
 
@@ -70,10 +90,16 @@ public class EditStudent extends javax.swing.JFrame {
 
         jLabel1.setText("Student name");
 
-        StudentIDLabel.setFont(new java.awt.Font("Helvetica Neue", 3, 18)); // NOI18N
-        StudentIDLabel.setText("Edit Student ID:");
+        NameField.setText(student.getName());
 
-        DateChooser.setDateFormatString("yyyy-MM-dd");
+        StudentIDLabel.setFont(new java.awt.Font("Helvetica Neue", 3, 18)); // NOI18N
+        StudentIDLabel.setText("Edit Student ID: "+student.getId());
+
+        YearChooser.setValue(student.getEntry());
+
+        Instant instant = student.getBirthdate().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        DateChooser.setDate(Date.from(instant));
+        DateChooser.setDateFormatString("yyyy-MM-DD");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -83,11 +109,14 @@ public class EditStudent extends javax.swing.JFrame {
 
         jLabel8.setText("Postal Code");
 
+        HouseNumberField.setText(""+student.getAddress().getNumber());
+
         try {
             PCField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#####-###")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        PCField.setText(student.getAddress().getPostalCode());
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -124,12 +153,16 @@ public class EditStudent extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel9.setText("Previous School");
+
+        PrevSchCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Public", "Private" }));
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(160, Short.MAX_VALUE)
+                .addContainerGap(172, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(StudentIDLabel)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -148,14 +181,17 @@ public class EditStudent extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createSequentialGroup()
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel5)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel9))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(FileSelectButton))
                                 .addGroup(jPanel4Layout.createSequentialGroup()
                                     .addGap(17, 17, 17)
-                                    .addComponent(GroupCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(FileSelectButton))))))
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(PrevSchCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(GroupCBox, 0, 119, Short.MAX_VALUE)))))))
                 .addGap(150, 150, 150))
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -183,31 +219,31 @@ public class EditStudent extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(FileSelectButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(374, 374, 374))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(PrevSchCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
-
-        jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
-
-        ExitButton.setText("Exit");
-        ExitButton.addActionListener(this::ExitButtonActionPerformed);
-
-        AnalyticsButton.setText("Analytics");
-
-        HomeButton.setText("Home");
-        HomeButton.addActionListener(this::HomeButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(AnalyticsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(HomeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ExitButton))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,7 +253,28 @@ public class EditStudent extends javax.swing.JFrame {
                     .addComponent(AnalyticsButton)
                     .addComponent(HomeButton)
                     .addComponent(ExitButton))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        EditButton.setText("Edit");
+        EditButton.addActionListener(this::EditButtonActionPerformed);
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(EditButton))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(EditButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -225,10 +282,11 @@ public class EditStudent extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -236,7 +294,7 @@ public class EditStudent extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -252,6 +310,12 @@ public class EditStudent extends javax.swing.JFrame {
         home.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_HomeButtonActionPerformed
+
+    private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
+        String newName = NameField.getText();
+        LocalDate newBDate = new java.sql.Date(DateChooser.getDate().getTime()).toLocalDate();
+        DBTools.updateStudent(student.getId(), student, imageFile);
+    }//GEN-LAST:event_EditButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -275,32 +339,53 @@ public class EditStudent extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new EditStudent().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new EditStudent(student).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AnalyticsButton;
     private com.toedter.calendar.JDateChooser DateChooser;
+    private javax.swing.JButton EditButton;
     private javax.swing.JButton ExitButton;
     private javax.swing.JButton FileSelectButton;
     private javax.swing.JComboBox<String> GroupCBox;
     private javax.swing.JButton HomeButton;
     private javax.swing.JFormattedTextField HouseNumberField;
+    private javax.swing.JFormattedTextField HouseNumberField1;
+    private javax.swing.JFormattedTextField HouseNumberField2;
+    private javax.swing.JFormattedTextField HouseNumberField3;
     private javax.swing.JTextField NameField;
     private javax.swing.JFormattedTextField PCField;
+    private javax.swing.JFormattedTextField PCField1;
+    private javax.swing.JFormattedTextField PCField2;
+    private javax.swing.JFormattedTextField PCField3;
+    private javax.swing.JComboBox<String> PrevSchCBox;
     private javax.swing.JLabel StudentIDLabel;
     private com.toedter.calendar.JYearChooser YearChooser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
 }

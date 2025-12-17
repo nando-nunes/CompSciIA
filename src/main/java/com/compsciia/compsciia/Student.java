@@ -16,6 +16,15 @@ public class Student {
     private int group;
     private int entry;
     private String prevSchool;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getPrevSchool() {
         return prevSchool;
