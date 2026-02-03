@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,7 +45,7 @@ public class HomeScreen extends javax.swing.JFrame {
 
             // 3. Loop through result set and add rows
             while (rs.next()) {
-                Vector<Object> row = new Vector<>();
+                Vector<Object> row = new Vector<Object>();
                 row.add(rs.getInt("StudentID"));
                 row.add(rs.getString("Name"));
                 row.add(rs.getDate("Birthdate"));
@@ -58,7 +59,7 @@ public class HomeScreen extends javax.swing.JFrame {
             cnct.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "There was an issue loading the Students table. Please try again");
         }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -86,6 +87,7 @@ public class HomeScreen extends javax.swing.JFrame {
         EditStudentButton = new javax.swing.JButton();
         AddStudentButton = new javax.swing.JButton();
         AnalyticsButton = new javax.swing.JButton();
+        DeleteStudentButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,6 +156,9 @@ public class HomeScreen extends javax.swing.JFrame {
         AnalyticsButton.setText("Analytics");
         AnalyticsButton.addActionListener(this::AnalyticsButtonActionPerformed);
 
+        DeleteStudentButton.setText("Delete Student");
+        DeleteStudentButton.addActionListener(this::DeleteStudentButtonActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -166,6 +171,8 @@ public class HomeScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EditStudentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(DeleteStudentButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ExitButton)
                 .addContainerGap())
         );
@@ -177,7 +184,8 @@ public class HomeScreen extends javax.swing.JFrame {
                     .addComponent(ExitButton)
                     .addComponent(EditStudentButton)
                     .addComponent(AddStudentButton)
-                    .addComponent(AnalyticsButton)))
+                    .addComponent(AnalyticsButton)
+                    .addComponent(DeleteStudentButton)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -221,7 +229,7 @@ public class HomeScreen extends javax.swing.JFrame {
         }
         int id = Integer.parseInt(StudentsTable.getValueAt(row, 0).toString());
         selectedStudent = DBTools.searchStudent(id);
-        System.out.println(id+" | "+selectedStudent.getName());
+//        System.out.println(id+" | "+selectedStudent.getName());
     }//GEN-LAST:event_StudentsTableMouseClicked
 
     private void EditStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditStudentButtonActionPerformed
@@ -229,6 +237,12 @@ public class HomeScreen extends javax.swing.JFrame {
         editStudent.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_EditStudentButtonActionPerformed
+
+    private void DeleteStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteStudentButtonActionPerformed
+        // TODO add your handling code here:
+        DBTools.deleteStudent(selectedStudent.getId());
+        this.loadTable();
+    }//GEN-LAST:event_DeleteStudentButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -258,6 +272,7 @@ public class HomeScreen extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddStudentButton;
     private javax.swing.JButton AnalyticsButton;
+    private javax.swing.JButton DeleteStudentButton;
     private javax.swing.JButton EditStudentButton;
     private javax.swing.JButton ExitButton;
     private javax.swing.JTable StudentsTable;

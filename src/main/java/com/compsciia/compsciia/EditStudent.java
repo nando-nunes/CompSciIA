@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -72,11 +73,13 @@ public class EditStudent extends javax.swing.JFrame {
         ExitButton.addActionListener(this::ExitButtonActionPerformed);
 
         AnalyticsButton.setText("Analytics");
+        AnalyticsButton.addActionListener(this::AnalyticsButtonActionPerformed);
 
         HomeButton.setText("Home");
         HomeButton.addActionListener(this::HomeButtonActionPerformed);
 
         FileSelectButton.setText("Select File");
+        FileSelectButton.addActionListener(this::FileSelectButtonActionPerformed);
 
         jLabel5.setText("Student Photo");
 
@@ -314,8 +317,34 @@ public class EditStudent extends javax.swing.JFrame {
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
         String newName = NameField.getText();
         LocalDate newBDate = new java.sql.Date(DateChooser.getDate().getTime()).toLocalDate();
+        Address newAddress = new Address();
+        AddressValidation.validateCEP(PCField.getText(), newAddress, this);
+        newAddress.setNumber(Integer.parseInt(HouseNumberField.getText()));
+        student.setName(newName);
+        student.setBirthdate(newBDate);
+        student.setAddress(newAddress);
+        student.setEntry(YearChooser.getValue());
+        student.setGroup(GroupCBox.getSelectedIndex()+1);
+        student.setPrevSchool(PrevSchCBox.getSelectedItem().toString());
+        
         DBTools.updateStudent(student.getId(), student, imageFile);
     }//GEN-LAST:event_EditButtonActionPerformed
+
+    private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            imageFile = fileChooser.getSelectedFile();
+        }
+    }//GEN-LAST:event_FileSelectButtonActionPerformed
+
+    private void AnalyticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnalyticsButtonActionPerformed
+        // TODO add your handling code here:
+        Analytics analyticsPage = new Analytics();
+        analyticsPage.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_AnalyticsButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -351,28 +380,13 @@ public class EditStudent extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> GroupCBox;
     private javax.swing.JButton HomeButton;
     private javax.swing.JFormattedTextField HouseNumberField;
-    private javax.swing.JFormattedTextField HouseNumberField1;
-    private javax.swing.JFormattedTextField HouseNumberField2;
-    private javax.swing.JFormattedTextField HouseNumberField3;
     private javax.swing.JTextField NameField;
     private javax.swing.JFormattedTextField PCField;
-    private javax.swing.JFormattedTextField PCField1;
-    private javax.swing.JFormattedTextField PCField2;
-    private javax.swing.JFormattedTextField PCField3;
     private javax.swing.JComboBox<String> PrevSchCBox;
     private javax.swing.JLabel StudentIDLabel;
     private com.toedter.calendar.JYearChooser YearChooser;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -383,9 +397,6 @@ public class EditStudent extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
 }

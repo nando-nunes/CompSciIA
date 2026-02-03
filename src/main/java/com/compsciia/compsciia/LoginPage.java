@@ -120,9 +120,16 @@ public class LoginPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
-        HomeScreen home = new HomeScreen();
-        home.setVisible(true);
-        this.dispose();
+        
+        String username = UsernameField.getText();
+        String password = PasswordField.getText();
+        String hashPassword = DBTools.hash(password);
+        
+        System.out.println(username+"\n"+password);
+        System.out.println(DBTools.findUser(username, password));
+//        HomeScreen home = new HomeScreen();
+//        home.setVisible(true);
+//        this.dispose();
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     /**

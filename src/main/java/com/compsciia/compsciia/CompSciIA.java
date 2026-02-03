@@ -13,6 +13,6 @@ public class CompSciIA {
     public static void main(String[] args) {
         Student student = DBTools.searchStudent(6);
         
-        System.out.println(student.getName());
+        System.out.println(DBTools.hash("passwordd"));
     }
 }
