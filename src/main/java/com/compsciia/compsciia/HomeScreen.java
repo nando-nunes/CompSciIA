@@ -88,6 +88,7 @@ public class HomeScreen extends javax.swing.JFrame {
         AddStudentButton = new javax.swing.JButton();
         AnalyticsButton = new javax.swing.JButton();
         DeleteStudentButton = new javax.swing.JButton();
+        studentProfileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,6 +160,9 @@ public class HomeScreen extends javax.swing.JFrame {
         DeleteStudentButton.setText("Delete Student");
         DeleteStudentButton.addActionListener(this::DeleteStudentButtonActionPerformed);
 
+        studentProfileButton.setText("Student Profile");
+        studentProfileButton.addActionListener(this::studentProfileButtonActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -167,6 +171,8 @@ public class HomeScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(AnalyticsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(studentProfileButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(AddStudentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EditStudentButton)
@@ -185,7 +191,8 @@ public class HomeScreen extends javax.swing.JFrame {
                     .addComponent(EditStudentButton)
                     .addComponent(AddStudentButton)
                     .addComponent(AnalyticsButton)
-                    .addComponent(DeleteStudentButton)))
+                    .addComponent(DeleteStudentButton)
+                    .addComponent(studentProfileButton)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -244,6 +251,13 @@ public class HomeScreen extends javax.swing.JFrame {
         this.loadTable();
     }//GEN-LAST:event_DeleteStudentButtonActionPerformed
 
+    private void studentProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentProfileButtonActionPerformed
+        // TODO add your handling code here:
+        StudentProfile stdProfile = new StudentProfile(selectedStudent);
+        stdProfile.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_studentProfileButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,5 +293,6 @@ public class HomeScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton studentProfileButton;
     // End of variables declaration//GEN-END:variables
 }

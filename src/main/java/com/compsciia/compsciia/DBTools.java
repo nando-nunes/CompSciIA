@@ -154,6 +154,7 @@ public class DBTools {
                 student.setGroup(results.getInt("StudentGroup"));
                 student.setEntry(results.getInt("YearofEntry"));
                 student.setId(results.getInt("StudentID"));
+                student.setPrevSchool(results.getString("PrevSchool"));
             }
             cnct.close();
             return student;
@@ -180,18 +181,47 @@ public class DBTools {
         }
     }
 
+    public static boolean findUser(String username) {
+        try {
+            Connection cnct = ConnectionFactory.getConnection();
+            // Dynamic SQL construction [cite: 186]
+            String sql = "SELECT * FROM Users WHERE Username='"+username+"';";
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+            ResultSet results = stmt.executeQuery(sql);
+            return results.next();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
     public static boolean findUser(String username, String password) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Dynamic SQL construction [cite: 186]
-            String sql = "SELECT * FROM Users WHERE Username=? AND Password = ?";
+            String sql = "SELECT * FROM Users WHERE Username='"+username+"' and Password= '"+password+"';";
             PreparedStatement stmt = cnct.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, password);
             ResultSet results = stmt.executeQuery(sql);
             return results.next();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             return false;
+        }
+    }
+    
+    public static void addUser(String username, String password){
+        try {
+            Connection cnct = ConnectionFactory.getConnection();
+            String sql = "INSERT INTO Users(Username, Password) VALUES(?,?)";
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+
+            stmt.setString(1, username);
+            stmt.setString(2, hash(password));
+
+            stmt.execute();
+
+            cnct.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public static String hash(String password) {

@@ -11,8 +11,6 @@ package com.compsciia.compsciia;
 public class CompSciIA {
 
     public static void main(String[] args) {
-        Student student = DBTools.searchStudent(6);
-        
-        System.out.println(DBTools.hash("passwordd"));
+        System.out.println(DBTools.findUser("admin"));
     }
 }

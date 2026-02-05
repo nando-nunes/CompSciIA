@@ -9,6 +9,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFileChooser;
 
 /**
@@ -22,12 +24,19 @@ public class EditStudent extends javax.swing.JFrame {
     private static Student student;
     private static File imageFile;
     
+    private final Map<String, Integer> prevSchoolMap;
+    
+    
     /**
      * Creates new form EditStudent
      * @param student
      */
     public EditStudent(Student student) {
+        this.prevSchoolMap = new HashMap<>();
+        prevSchoolMap.put("Public",0);
+        prevSchoolMap.put("Private",1);
         EditStudent.student = student;
+        imageFile = new File("src/main/resources/student_images/pfp_"+student.getId()+ ".png");
         initComponents();
     }
 
@@ -65,7 +74,7 @@ public class EditStudent extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         PrevSchCBox = new javax.swing.JComboBox<>();
         jPanel8 = new javax.swing.JPanel();
-        EditButton = new javax.swing.JButton();
+        ConfirmButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -86,6 +95,8 @@ public class EditStudent extends javax.swing.JFrame {
         jLabel4.setText("Year of Entry");
 
         GroupCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Group 1", "Group 2" }));
+        GroupCBox.setSelectedIndex(student.getGroup()-1);
+        GroupCBox.setSelectedItem("Group "+student.getGroup());
 
         jLabel3.setText("Group");
 
@@ -159,6 +170,8 @@ public class EditStudent extends javax.swing.JFrame {
         jLabel9.setText("Previous School");
 
         PrevSchCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Public", "Private" }));
+        PrevSchCBox.setSelectedIndex(prevSchoolMap.get(student.getPrevSchool()));
+        PrevSchCBox.setSelectedItem(student.getPrevSchool());
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -261,8 +274,8 @@ public class EditStudent extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        EditButton.setText("Edit");
-        EditButton.addActionListener(this::EditButtonActionPerformed);
+        ConfirmButton.setText("Confirm");
+        ConfirmButton.addActionListener(this::ConfirmButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -270,13 +283,13 @@ public class EditStudent extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(EditButton))
+                .addComponent(ConfirmButton))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(EditButton)
+                .addComponent(ConfirmButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -314,7 +327,7 @@ public class EditStudent extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_HomeButtonActionPerformed
 
-    private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditButtonActionPerformed
+    private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
         String newName = NameField.getText();
         LocalDate newBDate = new java.sql.Date(DateChooser.getDate().getTime()).toLocalDate();
         Address newAddress = new Address();
@@ -328,7 +341,10 @@ public class EditStudent extends javax.swing.JFrame {
         student.setPrevSchool(PrevSchCBox.getSelectedItem().toString());
         
         DBTools.updateStudent(student.getId(), student, imageFile);
-    }//GEN-LAST:event_EditButtonActionPerformed
+        HomeScreen home = new HomeScreen();
+        home.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
         // TODO add your handling code here:
@@ -373,8 +389,8 @@ public class EditStudent extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AnalyticsButton;
+    private javax.swing.JButton ConfirmButton;
     private com.toedter.calendar.JDateChooser DateChooser;
-    private javax.swing.JButton EditButton;
     private javax.swing.JButton ExitButton;
     private javax.swing.JButton FileSelectButton;
     private javax.swing.JComboBox<String> GroupCBox;

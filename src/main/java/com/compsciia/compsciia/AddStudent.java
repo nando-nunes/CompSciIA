@@ -59,7 +59,7 @@ public class AddStudent extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         PrevSchCBox = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
-        AddButton = new javax.swing.JButton();
+        ConfirmButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -228,12 +228,12 @@ public class AddStudent extends javax.swing.JFrame {
                 .addComponent(AnalyticsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(HomeButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
                 .addComponent(ExitButton))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addGap(39, 39, 39))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,13 +243,13 @@ public class AddStudent extends javax.swing.JFrame {
                     .addComponent(AnalyticsButton)
                     .addComponent(HomeButton)
                     .addComponent(ExitButton))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        AddButton.setText("Add");
-        AddButton.addActionListener(this::AddButtonActionPerformed);
+        ConfirmButton.setText("Confirm");
+        ConfirmButton.addActionListener(this::ConfirmButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -257,13 +257,13 @@ public class AddStudent extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(AddButton))
+                .addComponent(ConfirmButton))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 8, Short.MAX_VALUE)
-                .addComponent(AddButton))
+                .addComponent(ConfirmButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,7 +299,7 @@ public class AddStudent extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_HomeButtonActionPerformed
 
-    private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
+    private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
         Address address = new Address();
         address.setNumber(Integer.parseInt(HouseNumberField.getText()));
         AddressValidation.validateCEP(PCField.getText(), address, this);
@@ -321,7 +321,7 @@ public class AddStudent extends javax.swing.JFrame {
         HomeScreen home = new HomeScreen();
         home.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_AddButtonActionPerformed
+    }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
         JFileChooser fileChooser = new JFileChooser();
@@ -358,8 +358,8 @@ public class AddStudent extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AddButton;
     private javax.swing.JButton AnalyticsButton;
+    private javax.swing.JButton ConfirmButton;
     private com.toedter.calendar.JDateChooser DateChooser;
     private javax.swing.JButton ExitButton;
     private javax.swing.JButton FileSelectButton;

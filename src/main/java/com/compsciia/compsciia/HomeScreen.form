@@ -133,6 +133,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="AnalyticsButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="studentProfileButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="AddStudentButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="EditStudentButton" min="-2" max="-2" attributes="0"/>
@@ -154,6 +156,7 @@
                       <Component id="AddStudentButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="AnalyticsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="DeleteStudentButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="studentProfileButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -198,6 +201,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteStudentButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="studentProfileButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Student Profile"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="studentProfileButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
