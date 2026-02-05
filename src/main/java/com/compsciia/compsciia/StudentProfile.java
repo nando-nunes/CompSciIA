@@ -4,6 +4,11 @@
  */
 package com.compsciia.compsciia;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -12,19 +17,29 @@ import javax.swing.JLabel;
  * @author fernandonunes
  */
 public class StudentProfile extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentProfile.class.getName());
-    
+
     private static Student student;
+    private static ImageIcon icon;
+
     /**
      * Creates new form StudentProfile
+     *
      * @param student
      */
     public StudentProfile(Student student) {
-        this.student = student;
+        StudentProfile.student = student;
+        try {
+            BufferedImage originalImage = ImageIO.read(new File("src/main/resources/student_images/pfp_" + student.getId() + ".png"));
+            int targetWidth = 240;
+            int targetHeight = 320;
+            Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(scaledImage);
+        } catch (IOException ex) {
+            System.getLogger(StudentProfile.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
         initComponents();
-        ImageIcon icon = new ImageIcon("src/main/resources/pfp_"+student.getId()+".png");
-        imageLabel = new JLabel(icon);
     }
 
     /**
@@ -89,7 +104,10 @@ public class StudentProfile extends javax.swing.JFrame {
                     .addComponent(HomeButton)))
         );
 
-        imageLabel.setText("jLabel1");
+        icon.setImageObserver(imageLabel);
+        imageLabel.setForeground(new java.awt.Color(60, 63, 65));
+        imageLabel.setIcon(icon);
+        imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -97,13 +115,13 @@ public class StudentProfile extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabel2.setText("Name:");
@@ -173,6 +191,7 @@ public class StudentProfile extends javax.swing.JFrame {
         );
 
         ExitButton.setText("Exit");
+        ExitButton.addActionListener(this::ExitButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -222,7 +241,7 @@ public class StudentProfile extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 645, Short.MAX_VALUE)
+            .addGap(0, 672, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -231,7 +250,7 @@ public class StudentProfile extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+            .addGap(0, 402, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -243,12 +262,20 @@ public class StudentProfile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AnalyticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnalyticsButtonActionPerformed
-        // TODO add your handling code here:
+        Analytics analytics = new Analytics();
+        analytics.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_AnalyticsButtonActionPerformed
 
     private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeButtonActionPerformed
-        // TODO add your handling code here:
+        HomeScreen home = new HomeScreen();
+        home.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_HomeButtonActionPerformed
+
+    private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_ExitButtonActionPerformed
 
     /**
      * @param args the command line arguments

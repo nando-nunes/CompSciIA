@@ -61,6 +61,8 @@ public class HomeScreen extends javax.swing.JFrame {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "There was an issue loading the Students table. Please try again");
         }
+
+        //Code for centering the data from the table
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
@@ -240,9 +242,13 @@ public class HomeScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_StudentsTableMouseClicked
 
     private void EditStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditStudentButtonActionPerformed
-        EditStudent editStudent = new EditStudent(selectedStudent);
-        editStudent.setVisible(true);
-        this.dispose();
+        try {
+            EditStudent editStudent = new EditStudent(selectedStudent);
+            editStudent.setVisible(true);
+            this.dispose();
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Select a valid student", "Student error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_EditStudentButtonActionPerformed
 
     private void DeleteStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteStudentButtonActionPerformed
@@ -253,9 +259,14 @@ public class HomeScreen extends javax.swing.JFrame {
 
     private void studentProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentProfileButtonActionPerformed
         // TODO add your handling code here:
-        StudentProfile stdProfile = new StudentProfile(selectedStudent);
+        try {
+            StudentProfile stdProfile = new StudentProfile(selectedStudent);
         stdProfile.setVisible(true);
         this.dispose();
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Select a valid student", "Student error", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_studentProfileButtonActionPerformed
 
     /**

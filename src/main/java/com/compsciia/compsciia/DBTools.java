@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -123,8 +125,8 @@ public class DBTools {
             System.getLogger(DBTools.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
-    public static void deleteStudent(int id){
+
+    public static void deleteStudent(int id) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Dynamic SQL construction [cite: 186]
@@ -185,7 +187,7 @@ public class DBTools {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Dynamic SQL construction [cite: 186]
-            String sql = "SELECT * FROM Users WHERE Username='"+username+"';";
+            String sql = "SELECT * FROM Users WHERE Username='" + username + "';";
             PreparedStatement stmt = cnct.prepareStatement(sql);
             ResultSet results = stmt.executeQuery(sql);
             return results.next();
@@ -194,11 +196,12 @@ public class DBTools {
             return false;
         }
     }
+
     public static boolean findUser(String username, String password) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             // Dynamic SQL construction [cite: 186]
-            String sql = "SELECT * FROM Users WHERE Username='"+username+"' and Password= '"+password+"';";
+            String sql = "SELECT * FROM Users WHERE Username='" + username + "' and Password= '" + password + "';";
             PreparedStatement stmt = cnct.prepareStatement(sql);
             ResultSet results = stmt.executeQuery(sql);
             return results.next();
@@ -207,8 +210,8 @@ public class DBTools {
             return false;
         }
     }
-    
-    public static void addUser(String username, String password){
+
+    public static void addUser(String username, String password) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             String sql = "INSERT INTO Users(Username, Password) VALUES(?,?)";
@@ -224,17 +227,39 @@ public class DBTools {
             throw new RuntimeException(e);
         }
     }
+
     public static String hash(String password) {
         try {
             // Create a SHA-256 MessageDigest instance
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            
+
             // Perform the hashing on the password bytes
             byte[] hashBytes = digest.digest(password.getBytes("UTF-8"));
-            
+
             // Convert the bytes into a readable String (Base64)
             return Base64.getEncoder().encodeToString(hashBytes);
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static HashMap dataAnalysis(String field) {
+        HashMap<String, Integer> data = new HashMap<>();
+        try {
+            Connection cnct = ConnectionFactory.getConnection();
+            // Dynamic SQL construction [cite: 186]
+            String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
+            PreparedStatement stmt = cnct.prepareStatement(sql);
+
+            ResultSet results = stmt.executeQuery(sql);
+
+            while (results.next()) {
+                data.put(results.getString(field), results.getInt("COUNT(StudentID)"));
+            }
+            cnct.close();
+            return data;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             return null;
         }
     }

@@ -4,6 +4,8 @@
  */
 package com.compsciia.compsciia;
 
+import org.jfree.chart.ChartPanel;
+
 /**
  *
  * @author fernandonunes
@@ -11,6 +13,8 @@ package com.compsciia.compsciia;
 public class Analytics extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Analytics.class.getName());
+    
+    private static ChartPanel chartPanel;
 
     /**
      * Creates new form Analytics
@@ -31,10 +35,11 @@ public class Analytics extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        AddressButton = new javax.swing.JButton();
+        prevSchoolButton = new javax.swing.JButton();
         GroupButton = new javax.swing.JButton();
         AgeButton = new javax.swing.JButton();
         DownloadButton = new javax.swing.JButton();
+        AddressButton1 = new javax.swing.JButton();
         HomeButton = new javax.swing.JButton();
         ExitButton = new javax.swing.JButton();
 
@@ -51,7 +56,7 @@ public class Analytics extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        AddressButton.setText("Address Data");
+        prevSchoolButton.setText("Previous School Data");
 
         GroupButton.setText("Group Data");
         GroupButton.addActionListener(this::GroupButtonActionPerformed);
@@ -60,31 +65,40 @@ public class Analytics extends javax.swing.JFrame {
 
         DownloadButton.setText("Download as PDF");
 
+        AddressButton1.setText("Address Data");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(AddressButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(GroupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(AgeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(DownloadButton)
                 .addGap(0, 84, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(AddressButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(GroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(AgeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(prevSchoolButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(115, 115, 115)
-                .addComponent(AddressButton)
+                .addComponent(AddressButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(GroupButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(AgeButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(prevSchoolButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                 .addComponent(DownloadButton)
                 .addContainerGap())
         );
@@ -181,7 +195,7 @@ public class Analytics extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AddressButton;
+    private javax.swing.JButton AddressButton1;
     private javax.swing.JButton AgeButton;
     private javax.swing.JButton DownloadButton;
     private javax.swing.JButton ExitButton;
@@ -190,5 +204,6 @@ public class Analytics extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton prevSchoolButton;
     // End of variables declaration//GEN-END:variables
 }
