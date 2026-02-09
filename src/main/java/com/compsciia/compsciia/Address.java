@@ -9,13 +9,36 @@ package com.compsciia.compsciia;
  * @author fernandonunes
  */
 public class Address {
+
     private String street;
     private int number;
     private String neighborhood;
     private String city;
     private String postalCode;
-    
+
     private boolean valid = false;
+
+    public Address() {
+    }
+
+    public Address(String fullAddress) { //Used when creating an Address using the Students database
+        String[] components = fullAddress.split(",");
+        this.street = components[0].trim();
+        this.number = Integer.parseInt(components[1].trim());
+        this.postalCode = components[2].trim();
+        this.neighborhood = components[3].trim();
+        this.city = components[4].trim();
+        this.valid = true;
+    }
+
+    public Address(String street, int number, String neighborhood, String city, String postalCode) {
+        this.street = street;
+        this.number = number;
+        this.neighborhood = neighborhood;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.valid = true;
+    }
 
     public void setValid(boolean valid) {
         this.valid = valid;
@@ -30,33 +53,6 @@ public class Address {
         return street + ", " + number + ", " + postalCode + ", " + neighborhood + ", " + city;
     }
 
-    
-    
-    public Address(){
-        
-    }
-    
-    public Address(String fullAddress){
-        String[] components = fullAddress.split(",");
-        this.street = components[0].trim();
-        this.number = Integer.parseInt(components[1].trim());
-        this.postalCode = components[2].trim();
-        this.neighborhood = components[3].trim();
-        this.city = components[4].trim();
-        this.valid = true;
-    }
-    
-    public Address(String street, int number, String neighborhood, String city, String postalCode) {
-        this.street = street;
-        this.number = number;
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.valid = true;
-    }
-
-    
-    
     public String getStreet() {
         return street;
     }
@@ -96,5 +92,5 @@ public class Address {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
-    
+
 }

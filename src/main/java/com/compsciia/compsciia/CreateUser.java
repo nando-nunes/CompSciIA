@@ -146,8 +146,8 @@ public class CreateUser extends javax.swing.JFrame {
         if (DBTools.findUser(username)) {
             JOptionPane.showMessageDialog(this, "This username is taken!!!","Account Error",JOptionPane.ERROR_MESSAGE);
         } else {
-            System.out.println(password);
-            System.out.println(password.length());
+//            System.out.println(password);
+//            System.out.println(password.length());
             if (password.length() < 8) {
                 JOptionPane.showMessageDialog(this, "Your password should have at least 8 characters","Account Error",JOptionPane.ERROR_MESSAGE);
             } else {

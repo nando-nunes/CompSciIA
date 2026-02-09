@@ -313,7 +313,7 @@ public class AddStudent extends javax.swing.JFrame {
             PCField.setText("");
             return;
         }
-        System.out.println(address.toString());
+//        System.out.println(address.toString());
         String studentName = NameField.getText();
 
         LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -340,7 +340,7 @@ public class AddStudent extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            System.out.println("Approved");
+//            System.out.println("Approved");
             selectedFile = fileChooser.getSelectedFile();
         }
     }//GEN-LAST:event_FileSelectButtonActionPerformed

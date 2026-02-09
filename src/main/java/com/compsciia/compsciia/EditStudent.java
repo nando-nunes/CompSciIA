@@ -7,36 +7,39 @@ package com.compsciia.compsciia;
 import java.io.File;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author fernandonunes
  */
 public class EditStudent extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditStudent.class.getName());
-    
+
     private static Student student;
-    private static File imageFile;
+    private static File selectedFile;
+    ;
     
     private final Map<String, Integer> prevSchoolMap;
-    
-    
+
     /**
      * Creates new form EditStudent
+     *
      * @param student
      */
     public EditStudent(Student student) {
         this.prevSchoolMap = new HashMap<>();
-        prevSchoolMap.put("Public",0);
-        prevSchoolMap.put("Private",1);
+        prevSchoolMap.put("Public", 0);
+        prevSchoolMap.put("Private", 1);
         EditStudent.student = student;
-        imageFile = new File("src/main/resources/student_images/pfp_"+student.getId()+ ".png");
+        selectedFile = new File("src/main/resources/student_images/pfp_" + student.getId() + ".png");
         initComponents();
     }
 
@@ -113,7 +116,7 @@ public class EditStudent extends javax.swing.JFrame {
 
         Instant instant = student.getBirthdate().atStartOfDay(ZoneId.systemDefault()).toInstant();
         DateChooser.setDate(Date.from(instant));
-        DateChooser.setDateFormatString("yyyy-MM-DD");
+        DateChooser.setDateFormatString("yyyy-MM-dd");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -328,22 +331,38 @@ public class EditStudent extends javax.swing.JFrame {
     }//GEN-LAST:event_HomeButtonActionPerformed
 
     private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
-        String newName = NameField.getText();
-        LocalDate newBDate = new java.sql.Date(DateChooser.getDate().getTime()).toLocalDate();
-        Address newAddress = new Address();
-        AddressValidation.validateCEP(PCField.getText(), newAddress, this);
-        newAddress.setNumber(Integer.parseInt(HouseNumberField.getText()));
-        student.setName(newName);
-        student.setBirthdate(newBDate);
-        student.setAddress(newAddress);
-        student.setEntry(YearChooser.getValue());
-        student.setGroup(GroupCBox.getSelectedIndex()+1);
-        student.setPrevSchool(PrevSchCBox.getSelectedItem().toString());
-        
-        DBTools.updateStudent(student.getId(), student, imageFile);
-        HomeScreen home = new HomeScreen();
-        home.setVisible(true);
-        this.dispose();
+        boolean validStudent = true;
+        Address address = student.getAddress();
+        if (!(address.getPostalCode().equals(PCField.getText())) && address.getNumber() != Integer.parseInt(HouseNumberField.getText())) {
+            address.setNumber(Integer.parseInt(HouseNumberField.getText()));
+            AddressValidation.validateCEP(PCField.getText(), address, this);
+            if (!address.isValid()) {
+                PCField.setText("");
+                return;
+            }
+        }
+        String studentName = NameField.getText();
+
+        LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        if (age < 10 || age > 14) {
+            JOptionPane.showMessageDialog(this, "Insert a valid birth date", "Birth date error", JOptionPane.ERROR_MESSAGE);
+            validStudent = false;
+        }
+        int group = GroupCBox.getSelectedIndex() + 1;
+        int entry = YearChooser.getYear();
+        File imageFile = selectedFile;
+        String prevSchool = PrevSchCBox.getSelectedItem().toString();
+        Student student = new Student(studentName, birthDate, group, entry, address);
+        student.setPrevSchool(prevSchool);
+        student.setId(EditStudent.student.getId());
+
+        if (validStudent) {
+            DBTools.updateStudent(student.getId(), student, imageFile);
+            HomeScreen home = new HomeScreen();
+            home.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
@@ -351,7 +370,7 @@ public class EditStudent extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            imageFile = fileChooser.getSelectedFile();
+            selectedFile = fileChooser.getSelectedFile();
         }
     }//GEN-LAST:event_FileSelectButtonActionPerformed
 

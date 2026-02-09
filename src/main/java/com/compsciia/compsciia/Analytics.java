@@ -292,7 +292,6 @@ public class Analytics extends javax.swing.JFrame {
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selectedFolder = chooser.getSelectedFile();
-
             String folderPath = selectedFolder.getAbsolutePath();
             File file = new File(folderPath + "/"+chartType+"-data.pdf");
             ExportUtils.writeAsPDF(generatedChart, chartAreaPanel.getWidth(), chartAreaPanel.getHeight(), file);

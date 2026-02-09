@@ -27,65 +27,42 @@ import java.util.Map;
  */
 public class DBTools {
 
-    public static void addStudent(Student student) {
-        try {
-            Connection cnct = ConnectionFactory.getConnection();
-            String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Address, PrevSchool) VALUES(?,?,?,?,?,?)";
-            PreparedStatement stmt = cnct.prepareStatement(sql);
 
-            stmt.setString(1, student.getName());
-            stmt.setString(2, student.getBirthdate().toString());
-            stmt.setInt(3, student.getGroup());
-            stmt.setInt(4, student.getEntry());
-            stmt.setString(5, student.getAddress().toString());
-            stmt.setString(6, student.getPrevSchool());
-
-            stmt.execute();
-
-            student.setId(getLastID());
-            cnct.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // Add Student (With Image - Polymorphism) [cite: 81]
     public static void addStudent(Student student, File imageFile) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
-            // Note: SQL query includes 'Image' column [cite: 83]
             String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Address, PrevSchool) VALUES(?,?,?,?,?,?)";
+            //Using PreparedStatement to avoid SQL Injection
             PreparedStatement stmt = cnct.prepareStatement(sql);
-
+            
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getBirthdate().toString());
             stmt.setInt(3, student.getGroup());
             stmt.setInt(4, student.getEntry());
             stmt.setString(5, student.getAddress().toString());
             stmt.setString(6, student.getPrevSchool());
-
             stmt.execute();
-            // File handling [cite: 84-89]
+            
+            // File handling 
             Path filePath = imageFile.toPath();
             String pathStr = filePath.toString();
             String extension = pathStr.substring(pathStr.indexOf("."));
             String fileName = "pfp_" + getLastID();
-            String target = "src/main/resources/student_images/" + fileName + extension;
+            // Adding the file to a folder within the project that stores all students' pictures
+            String target = "src/main/resources/student_images/" + fileName + ".png";
             updateStudent(getLastID(), "Image", target);
-
             Path targetPath = Paths.get(target);
-            // Copy file to resources [cite: 95]
             Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-
+            
+            //Method from this class to get the latest Student ID and add it to the Student object
             student.setId(getLastID());
-
             cnct.close();
         } catch (IOException | SQLException e) {
-            throw new RuntimeException(e);
+            
         }
     }
 
-    // Update Student [cite: 180]
+    // Update Student
     public static void updateStudent(int id, String field, String newValue) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
@@ -115,8 +92,8 @@ public class DBTools {
             Path filePath = imageFile.toPath();
             String pathStr = filePath.toString();
             String extension = pathStr.substring(pathStr.indexOf("."));
-            String fileName = "pfp_" + getLastID();
-            String target = "src/main/resources/student_images/" + fileName + extension;
+            String fileName = "pfp_" + id;
+            String target = "src/main/resources/student_images/" + fileName + ".png";
 
             Path targetPath = Paths.get(target);
             // Copy file to resources [cite: 95]
@@ -157,7 +134,7 @@ public class DBTools {
                 student.setBirthdate(results.getString("Birthdate"));
                 student.setGroup(results.getInt("StudentGroup"));
                 student.setEntry(results.getInt("YearofEntry"));
-                student.setId(results.getInt("StudentID"));
+                student.setId(id);
                 student.setPrevSchool(results.getString("PrevSchool"));
             }
             cnct.close();
