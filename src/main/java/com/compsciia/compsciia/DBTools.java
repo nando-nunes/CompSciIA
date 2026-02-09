@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -243,24 +245,65 @@ public class DBTools {
         }
     }
 
-    public static HashMap dataAnalysis(String field) {
-        HashMap<String, Integer> data = new HashMap<>();
+    public static void dataAnalysis(String field, Map<String, Integer> map) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
-            // Dynamic SQL construction [cite: 186]
-            String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
-            PreparedStatement stmt = cnct.prepareStatement(sql);
+            switch (field) {
+                case "Age":{
+                    field = "Birthdate";
 
-            ResultSet results = stmt.executeQuery(sql);
+                    String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
+                    PreparedStatement stmt = cnct.prepareStatement(sql);
 
-            while (results.next()) {
-                data.put(results.getString(field), results.getInt("COUNT(StudentID)"));
+                    ResultSet results = stmt.executeQuery(sql);
+                    int[] allAges = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                    while (results.next()) {
+//                System.out.println(results.getString(field)+results.getInt("COUNT(StudentID)"));
+                        LocalDate bDate = LocalDate.parse(results.getString(field));
+                        int currentAge = Period.between(bDate, LocalDate.now()).getYears();
+                        allAges[currentAge]++;
+                        map.put(String.valueOf(currentAge), allAges[currentAge]);
+                    }
+                    cnct.close();
+                    break;
+                }
+                case "Address":
+                {
+                    String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
+                    PreparedStatement stmt = cnct.prepareStatement(sql);
+
+                    ResultSet results = stmt.executeQuery(sql);
+                    while (results.next()) {
+                        Address address = new Address(results.getString("Address"));
+                        String neighborhood = address.getNeighborhood();
+                        if(!address.getCity().equals("São Paulo")){
+                            neighborhood+="*";
+                        }
+                        if(map.containsKey(neighborhood)){
+                            int curValue = map.get(neighborhood);
+                            map.put(neighborhood, curValue+=results.getInt("COUNT(StudentID)"));
+                        }else{
+                            map.put(neighborhood, results.getInt("COUNT(StudentID)"));
+                        }
+                    }
+                    cnct.close();
+                    break;
             }
-            cnct.close();
-            return data;
+                default:
+                    String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
+                    PreparedStatement stmt = cnct.prepareStatement(sql);
+
+                    ResultSet results = stmt.executeQuery(sql);
+
+                    while (results.next()) {
+//                System.out.println(results.getString(field)+results.getInt("COUNT(StudentID)"));
+                        map.put(results.getString(field), results.getInt("COUNT(StudentID)"));
+                    }
+                    cnct.close();
+                    break;
+            }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+
         }
     }
 }

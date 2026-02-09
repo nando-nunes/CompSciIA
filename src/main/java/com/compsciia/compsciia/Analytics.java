@@ -4,17 +4,38 @@
  */
 package com.compsciia.compsciia;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JFileChooser;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.ui.HorizontalAlignment;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.util.ExportUtils;
 
 /**
  *
  * @author fernandonunes
  */
 public class Analytics extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Analytics.class.getName());
-    
-    private static ChartPanel chartPanel;
+
+    private static JFreeChart generatedChart;
+    private static String chartType;
 
     /**
      * Creates new form Analytics
@@ -33,53 +54,48 @@ public class Analytics extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        chartAreaPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         prevSchoolButton = new javax.swing.JButton();
         GroupButton = new javax.swing.JButton();
         AgeButton = new javax.swing.JButton();
-        DownloadButton = new javax.swing.JButton();
-        AddressButton1 = new javax.swing.JButton();
+        downloadButton = new javax.swing.JButton();
+        addressButton = new javax.swing.JButton();
         HomeButton = new javax.swing.JButton();
         ExitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        chartAreaPanel.setLayout(new java.awt.BorderLayout());
 
         prevSchoolButton.setText("Previous School Data");
+        prevSchoolButton.addActionListener(this::prevSchoolButtonActionPerformed);
 
         GroupButton.setText("Group Data");
         GroupButton.addActionListener(this::GroupButtonActionPerformed);
 
         AgeButton.setText("Age Data");
+        AgeButton.addActionListener(this::AgeButtonActionPerformed);
 
-        DownloadButton.setText("Download as PDF");
+        downloadButton.setText("Download as PDF");
+        downloadButton.addActionListener(this::downloadButtonActionPerformed);
 
-        AddressButton1.setText("Address Data");
+        addressButton.setText("Address Data");
+        addressButton.addActionListener(this::addressButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(DownloadButton)
+                .addComponent(downloadButton)
                 .addGap(0, 84, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AddressButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(GroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(AgeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -91,7 +107,7 @@ public class Analytics extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(115, 115, 115)
-                .addComponent(AddressButton1)
+                .addComponent(addressButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(GroupButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -99,7 +115,7 @@ public class Analytics extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(prevSchoolButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
-                .addComponent(DownloadButton)
+                .addComponent(downloadButton)
                 .addContainerGap())
         );
 
@@ -110,13 +126,13 @@ public class Analytics extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chartAreaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(chartAreaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -156,7 +172,25 @@ public class Analytics extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void GroupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GroupButtonActionPerformed
-        // TODO add your handling code here:
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        Map<String, Integer> dataMap = new HashMap<>();
+        DBTools.dataAnalysis("StudentGroup", dataMap);
+        int count = 0;
+        for (String key : dataMap.keySet()) {
+            dataset.insertValue(count, key, dataMap.get(key));
+            count++;
+        }
+        JFreeChart chart = ChartFactory.createPieChart("Group", dataset, true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(chartAreaPanel.getSize());
+
+        chartAreaPanel.removeAll();
+        chartAreaPanel.add(chartPanel, BorderLayout.CENTER);
+        chartAreaPanel.validate();
+        this.pack();
+        generatedChart = chart;
+        chartType = "Group";
     }//GEN-LAST:event_GroupButtonActionPerformed
 
     private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeButtonActionPerformed
@@ -168,6 +202,104 @@ public class Analytics extends javax.swing.JFrame {
     private void ExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitButtonActionPerformed
         System.exit(0);
     }//GEN-LAST:event_ExitButtonActionPerformed
+
+    private void prevSchoolButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevSchoolButtonActionPerformed
+        // TODO add your handling code here:
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        Map<String, Integer> dataMap = new HashMap<>();
+        DBTools.dataAnalysis("PrevSchool", dataMap);
+        int count = 0;
+        for (String key : dataMap.keySet()) {
+            dataset.insertValue(count, key, dataMap.get(key));
+            count++;
+        }
+        JFreeChart chart = ChartFactory.createPieChart("Previous School", dataset, true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(chartAreaPanel.getSize());
+
+        chartAreaPanel.removeAll();
+        chartAreaPanel.add(chartPanel, BorderLayout.CENTER);
+        chartAreaPanel.validate();
+        this.pack();
+        generatedChart = chart;
+        chartType = "PrevSchool";
+    }//GEN-LAST:event_prevSchoolButtonActionPerformed
+
+    private void AgeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgeButtonActionPerformed
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        Map<String, Integer> dataMap = new HashMap<>();
+        DBTools.dataAnalysis("Age", dataMap);
+        int count = 0;
+        for (String key : dataMap.keySet()) {
+            dataset.insertValue(count, key, dataMap.get(key));
+            count++;
+        }
+        JFreeChart chart = ChartFactory.createPieChart("Age", dataset, true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(chartAreaPanel.getSize());
+
+        chartAreaPanel.removeAll();
+        chartAreaPanel.add(chartPanel, BorderLayout.CENTER);
+        chartAreaPanel.validate();
+        this.pack();
+        generatedChart = chart;
+        chartType = "Age";
+    }//GEN-LAST:event_AgeButtonActionPerformed
+
+    private void addressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressButtonActionPerformed
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Map<String, Integer> dataMap = new HashMap<>();
+        DBTools.dataAnalysis("Address", dataMap);
+        for (String key : dataMap.keySet()) {
+            dataset.addValue(dataMap.get(key), key, key);
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Student Address",
+                "Neighborhood", "Number of Students",
+                dataset, PlotOrientation.VERTICAL,
+                true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(chartAreaPanel.getSize());
+
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        //Setting the intervals as integers, as there should be no partial students
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        TextTitle legendNote = new TextTitle("* Outside of Sao Paulo");
+
+        legendNote.setPosition(RectangleEdge.BOTTOM);
+
+        legendNote.setFont(new Font("SansSerif", Font.PLAIN, 10));
+        legendNote.setPaint(Color.DARK_GRAY);
+        legendNote.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        chart.addSubtitle(legendNote);
+
+        chartAreaPanel.removeAll();
+        chartAreaPanel.add(chartPanel, BorderLayout.CENTER);
+        chartAreaPanel.validate();
+        this.pack();
+        generatedChart = chart;
+        chartType = "Address";
+    }//GEN-LAST:event_addressButtonActionPerformed
+
+    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File selectedFolder = chooser.getSelectedFile();
+
+            String folderPath = selectedFolder.getAbsolutePath();
+            File file = new File(folderPath + "/"+chartType+"-data.pdf");
+            ExportUtils.writeAsPDF(generatedChart, chartAreaPanel.getWidth(), chartAreaPanel.getHeight(), file);
+
+        }
+
+    }//GEN-LAST:event_downloadButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,14 +327,14 @@ public class Analytics extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AddressButton1;
     private javax.swing.JButton AgeButton;
-    private javax.swing.JButton DownloadButton;
     private javax.swing.JButton ExitButton;
     private javax.swing.JButton GroupButton;
     private javax.swing.JButton HomeButton;
+    private javax.swing.JButton addressButton;
+    private javax.swing.JPanel chartAreaPanel;
+    private javax.swing.JButton downloadButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton prevSchoolButton;
     // End of variables declaration//GEN-END:variables

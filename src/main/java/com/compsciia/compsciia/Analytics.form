@@ -61,34 +61,23 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="41" max="32767" attributes="0"/>
-                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="chartAreaPanel" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jPanel2" max="32767" attributes="0"/>
+              <Component id="chartAreaPanel" max="32767" attributes="0"/>
               <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="chartAreaPanel">
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="394" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel3">
 
@@ -96,7 +85,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="DownloadButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="84" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -104,7 +93,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="AddressButton1" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <Component id="addressButton" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                                   <Component id="GroupButton" min="-2" pref="110" max="-2" attributes="0"/>
                                   <Component id="AgeButton" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
@@ -122,7 +111,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
-                      <Component id="AddressButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="addressButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="GroupButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -130,7 +119,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="prevSchoolButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="167" max="32767" attributes="0"/>
-                      <Component id="DownloadButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -141,6 +130,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Previous School Data"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="prevSchoolButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="GroupButton">
               <Properties>
@@ -154,16 +146,25 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Age Data"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AgeButtonActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="DownloadButton">
+            <Component class="javax.swing.JButton" name="downloadButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Download as PDF"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downloadButtonActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="AddressButton1">
+            <Component class="javax.swing.JButton" name="addressButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Address Data"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addressButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

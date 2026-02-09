@@ -6,8 +6,11 @@ package com.compsciia.compsciia;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -99,6 +102,8 @@ public class AddStudent extends javax.swing.JFrame {
         jLabel7.setText("House Number");
 
         jLabel8.setText("Postal Code");
+
+        HouseNumberField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
 
         try {
             PCField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#####-###")));
@@ -300,6 +305,7 @@ public class AddStudent extends javax.swing.JFrame {
     }//GEN-LAST:event_HomeButtonActionPerformed
 
     private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
+        boolean validStudent = true;
         Address address = new Address();
         address.setNumber(Integer.parseInt(HouseNumberField.getText()));
         AddressValidation.validateCEP(PCField.getText(), address, this);
@@ -309,18 +315,25 @@ public class AddStudent extends javax.swing.JFrame {
         }
         System.out.println(address.toString());
         String studentName = NameField.getText();
+
         LocalDate birthDate = DateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        if (age < 10 || age > 14) {
+            JOptionPane.showMessageDialog(this, "Insert a valid birth date", "Birth date error", JOptionPane.ERROR_MESSAGE);
+            validStudent = false;
+        }
         int group = GroupCBox.getSelectedIndex() + 1;
         int entry = YearChooser.getYear();
         File imageFile = selectedFile;
         String prevSchool = PrevSchCBox.getSelectedItem().toString();
-        Student student = new Student(studentName, birthDate, group, entry,address);
+        Student student = new Student(studentName, birthDate, group, entry, address);
         student.setPrevSchool(prevSchool);
-        DBTools.addStudent(student, imageFile);
-        
-        HomeScreen home = new HomeScreen();
-        home.setVisible(true);
-        this.dispose();
+        if (validStudent) {
+            DBTools.addStudent(student, imageFile);
+            HomeScreen home = new HomeScreen();
+            home.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     private void FileSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileSelectButtonActionPerformed
