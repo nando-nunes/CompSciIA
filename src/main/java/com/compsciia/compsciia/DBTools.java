@@ -6,6 +6,8 @@ package com.compsciia.compsciia;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,14 +29,13 @@ import java.util.Map;
  */
 public class DBTools {
 
-
     public static void addStudent(Student student, File imageFile) {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             String sql = "INSERT INTO Students(Name, Birthdate, StudentGroup, YearofEntry, Address, PrevSchool) VALUES(?,?,?,?,?,?)";
             //Using PreparedStatement to avoid SQL Injection
             PreparedStatement stmt = cnct.prepareStatement(sql);
-            
+
             stmt.setString(1, student.getName());
             stmt.setString(2, student.getBirthdate().toString());
             stmt.setInt(3, student.getGroup());
@@ -42,23 +43,37 @@ public class DBTools {
             stmt.setString(5, student.getAddress().toString());
             stmt.setString(6, student.getPrevSchool());
             stmt.execute();
-            
+
             // File handling 
-            Path filePath = imageFile.toPath();
-            String pathStr = filePath.toString();
-            String extension = pathStr.substring(pathStr.indexOf("."));
-            String fileName = "pfp_" + getLastID();
-            // Adding the file to a folder within the project that stores all students' pictures
-            String target = "src/main/resources/student_images/" + fileName + ".png";
-            updateStudent(getLastID(), "Image", target);
-            Path targetPath = Paths.get(target);
-            Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            
+            // 1. Get the User's Home Directory (Works on Windows, Mac, Linux)
+            String userHome = System.getProperty("user.home");
+
+            // 2. Define a dedicated folder for your app images
+            File appStorageDir = new File(userHome, "ScholarshipApp_Images");
+
+            // 3. Create the directory if it doesn't exist
+            if (!appStorageDir.exists()) {
+                appStorageDir.mkdirs();
+            }
+
+            // 4. Prepare the new file path
+            String fileName = "pfp_" + getLastID() + ".png"; // Force PNG for simplicity or keep dynamic extension
+            File targetFile = new File(appStorageDir, fileName);
+
+            // 5. Copy the file to this external folder
+            Path sourcePath = imageFile.toPath();
+            Path targetPath = targetFile.toPath();
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 6. Save the ABSOLUTE path to the database
+            String savedPath = targetFile.getAbsolutePath();
+            updateStudent(getLastID(), "Image", savedPath);
+
             //Method from this class to get the latest Student ID and add it to the Student object
             student.setId(getLastID());
             cnct.close();
         } catch (IOException | SQLException e) {
-            
+
         }
     }
 
@@ -89,16 +104,22 @@ public class DBTools {
             updateStudent(id, "PrevSchool", student.getPrevSchool());
             updateStudent(id, "YearofEntry", "" + student.getEntry());
 
-            Path filePath = imageFile.toPath();
-            String pathStr = filePath.toString();
-            String extension = pathStr.substring(pathStr.indexOf("."));
-            String fileName = "pfp_" + id;
-            String target = "src/main/resources/student_images/" + fileName + ".png";
+            String userHome = System.getProperty("user.home");
+            File appStorageDir = new File(userHome, "ScholarshipApp_Images");
+            if (!appStorageDir.exists()) {
+                appStorageDir.mkdirs();
+            }
 
-            Path targetPath = Paths.get(target);
-            // Copy file to resources [cite: 95]
-            Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            updateStudent(id, "Image", target);
+            String fileName = "pfp_" + id + ".png";
+            File targetFile = new File(appStorageDir, fileName);
+
+            Path sourcePath = imageFile.toPath();
+            Path targetPath = targetFile.toPath();
+
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Update database with the new absolute path
+            updateStudent(id, "Image", targetFile.getAbsolutePath());
 
         } catch (IOException ex) {
             System.getLogger(DBTools.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -136,6 +157,7 @@ public class DBTools {
                 student.setEntry(results.getInt("YearofEntry"));
                 student.setId(id);
                 student.setPrevSchool(results.getString("PrevSchool"));
+                student.setImagePath(results.getString("Image"));
             }
             cnct.close();
             return student;
@@ -226,7 +248,7 @@ public class DBTools {
         try {
             Connection cnct = ConnectionFactory.getConnection();
             switch (field) {
-                case "Age":{
+                case "Age": {
                     field = "Birthdate";
 
                     String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
@@ -244,8 +266,7 @@ public class DBTools {
                     cnct.close();
                     break;
                 }
-                case "Address":
-                {
+                case "Address": {
                     String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
                     PreparedStatement stmt = cnct.prepareStatement(sql);
 
@@ -253,19 +274,19 @@ public class DBTools {
                     while (results.next()) {
                         Address address = new Address(results.getString("Address"));
                         String neighborhood = address.getNeighborhood();
-                        if(!address.getCity().equals("São Paulo")){
-                            neighborhood+="*";
+                        if (!address.getCity().equals("São Paulo")) {
+                            neighborhood += "*";
                         }
-                        if(map.containsKey(neighborhood)){
+                        if (map.containsKey(neighborhood)) {
                             int curValue = map.get(neighborhood);
-                            map.put(neighborhood, curValue+=results.getInt("COUNT(StudentID)"));
-                        }else{
+                            map.put(neighborhood, curValue += results.getInt("COUNT(StudentID)"));
+                        } else {
                             map.put(neighborhood, results.getInt("COUNT(StudentID)"));
                         }
                     }
                     cnct.close();
                     break;
-            }
+                }
                 default:
                     String sql = "SELECT COUNT(StudentID)," + field + "  FROM Students GROUP BY " + field + ";";
                     PreparedStatement stmt = cnct.prepareStatement(sql);

@@ -30,14 +30,15 @@ public class StudentProfile extends javax.swing.JFrame {
      */
     public StudentProfile(Student student) {
         StudentProfile.student = student;
-        try {
-            BufferedImage originalImage = ImageIO.read(new File("src/main/resources/student_images/pfp_" + student.getId() + ".png"));
-            int targetWidth = 240;
-            int targetHeight = 320;
-            Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+        if (student.getImagePath() != null && !student.getImagePath().isEmpty()) {
+            ImageIcon originalIcon = new ImageIcon(student.getImagePath());
+
+            // Scale the image to fit the 240x320 label
+            Image scaledImage = originalIcon.getImage().getScaledInstance(240, 320, Image.SCALE_SMOOTH);
             icon = new ImageIcon(scaledImage);
-        } catch (IOException ex) {
-            System.getLogger(StudentProfile.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } else {
+            // Optional: Load a default image if none exists
+            icon = new ImageIcon();
         }
         initComponents();
     }

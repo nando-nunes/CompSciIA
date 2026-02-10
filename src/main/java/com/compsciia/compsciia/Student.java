@@ -17,6 +17,15 @@ public class Student {
     private int entry;
     private String prevSchool;
     private int id;
+    private String imagePath;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     public int getId() {
         return id;
