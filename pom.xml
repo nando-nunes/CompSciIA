@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.compsciia</groupId>
     <artifactId>CompSciIA</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -16,18 +16,33 @@
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.6.0</version> <!-- Use an appropriate version -->
             <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
                 <archive>
                     <manifest>
+                        <!-- Replace 'com.yourpackage.MainClass' with your actual main class -->
                         <mainClass>com.compsciia.compsciia.LoginPage</mainClass>
                     </manifest>
                 </archive>
             </configuration>
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
     </plugins>
 </build>
+
+
 
     <dependencies>
         <dependency>
@@ -52,13 +67,13 @@
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
-            <artifactId>mysql-connector-j-9.5.0</artifactId>
-            <version>9.5.0</version>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version> <!-- Use an appropriate version -->
         </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>com.compsciia.compsciia.CompSciIA</exec.mainClass>
+        <exec.mainClass>com.compsciia.compsciia.LoginPage</exec.mainClass>
     </properties>
 </project>
