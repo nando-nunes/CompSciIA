@@ -37,7 +37,7 @@ public class StudentProfile extends javax.swing.JFrame {
             Image scaledImage = originalIcon.getImage().getScaledInstance(240, 320, Image.SCALE_SMOOTH);
             icon = new ImageIcon(scaledImage);
         } else {
-            // Optional: Load a default image if none exists
+            // Load a default image if none exists
             icon = new ImageIcon();
         }
         initComponents();

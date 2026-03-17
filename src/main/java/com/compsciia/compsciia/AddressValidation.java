@@ -11,7 +11,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
  
@@ -25,9 +24,12 @@ public class AddressValidation {
         String url = "https://viacep.com.br/ws/" + cleanCep + "/json/";
         
         try {
+            //System creates the HTTP Client for the request
             HttpClient client = HttpClient.newHttpClient();
+            //Request is send based on the previously created URL
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            //Te
             JSONObject addressJSON = new JSONObject(response.body());
 
             
@@ -38,7 +40,8 @@ public class AddressValidation {
             address.setValid(true);
 
         } catch (IOException | InterruptedException | JSONException e) {
-            JOptionPane.showMessageDialog(frame, "Insert a valid Postal Code","Error loading Postal Code",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Insert a valid Postal Code","Error loading Postal Code",
+                    JOptionPane.ERROR_MESSAGE);
             
         }
     }

@@ -45,27 +45,27 @@ public class DBTools {
             stmt.execute();
 
             // File handling 
-            // 1. Get the User's Home Directory (Works on Windows, Mac, Linux)
+            // 1. Getting the User's Home Directory (Works on Windows, Mac, Linux)
             String userHome = System.getProperty("user.home");
 
-            // 2. Define a dedicated folder for your app images
+            // 2. Defining a dedicated folder for the images
             File appStorageDir = new File(userHome, "ScholarshipApp_Images");
 
-            // 3. Create the directory if it doesn't exist
+            // 3. Creating the directory if it doesn't exist
             if (!appStorageDir.exists()) {
                 appStorageDir.mkdirs();
             }
 
-            // 4. Prepare the new file path
+            // 4. Preparing the new file path
             String fileName = "pfp_" + getLastID() + ".png"; // Force PNG for simplicity or keep dynamic extension
             File targetFile = new File(appStorageDir, fileName);
 
-            // 5. Copy the file to this external folder
+            // 5. Copying the file to this external folder
             Path sourcePath = imageFile.toPath();
             Path targetPath = targetFile.toPath();
             Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
-            // 6. Save the ABSOLUTE path to the database
+            // 6. Saving the ABSOLUTE path to the database
             String savedPath = targetFile.getAbsolutePath();
             updateStudent(getLastID(), "Image", savedPath);
 
